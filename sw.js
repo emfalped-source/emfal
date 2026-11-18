@@ -8,7 +8,7 @@ self.addEventListener('activate', function (e) {
 });
 self.addEventListener('fetch', function (e) {
   var u = new URL(e.request.url);
-  if (e.request.method !== 'GET' || u.origin !== location.origin || u.pathname.indexOf('/superapp/') !== 0) return;
+  if (e.request.method !== 'GET' || u.origin !== location.origin || u.href.indexOf(self.registration.scope) !== 0) return;
   // rede primeiro (sempre a versão nova); sem internet, usa a cópia guardada
   e.respondWith(fetch(e.request).then(function (r) {
     var c = r.clone(); caches.open(CACHE).then(function (k) { k.put(e.request, c); }); return r;

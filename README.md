@@ -1,4 +1,4 @@
-# Super App EMFAL
+# EMFAL — Super App
 
 Um ícone e um login para os apps da Escola Municipal Francisca Alves (EMFAL).
 
@@ -8,4 +8,4 @@ Um ícone e um login para os apps da Escola Municipal Francisca Alves (EMFAL).
 - "Sou estudante: fazer prova" abre a tela do aluno da Prova Online, sem login de professor.
 - Instalável no celular (PWA): no Chrome, menu ⋮ › Instalar app / Adicionar à tela inicial.
 
-Endereço: https://emfalped-source.github.io/superapp/
+Endereço: https://emfalped-source.github.io/emfal/
