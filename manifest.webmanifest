@@ -1,0 +1,15 @@
+{
+  "name": "EMFAL — Super App",
+  "short_name": "EMFAL",
+  "description": "Todos os apps da Escola Municipal Francisca Alves num só lugar, com um login",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F5F7FA",
+  "theme_color": "#1E4FA3",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "icone-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

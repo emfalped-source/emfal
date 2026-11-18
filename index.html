@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EMFAL</title>
+<meta name="theme-color" content="#1E4FA3">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icone-192.png">
+<link rel="apple-touch-icon" href="icone-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--azul:#1E4FA3;--azul-esc:#163C7D;--azul-cl:#EAF1FB;--fundo:#F5F7FA;--tinta:#16202E;--suave:#4A5565;--borda:#D5DBE3;--erro:#B42318;--ok:#1B7F4B}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:Inter,system-ui,sans-serif;background:var(--fundo);color:var(--tinta);-webkit-font-smoothing:antialiased}
+button,input{font-family:inherit}
+[hidden]{display:none!important}
+.tela{min-height:100dvh;display:flex;flex-direction:column}
+/* login */
+.login{max-width:420px;margin:0 auto;width:100%;padding:56px 24px 28px;display:flex;flex-direction:column;gap:28px;flex:1}
+.marca{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.marca .logo{width:72px;height:72px;border-radius:20px;background:var(--azul);display:flex;align-items:center;justify-content:center}
+.marca h1{margin:0;font-size:28px;letter-spacing:-.5px}
+.marca p{margin:0;color:var(--suave);font-size:15px}
+form{display:flex;flex-direction:column;gap:14px;margin:0}
+.campo{display:flex;flex-direction:column;gap:6px}
+.campo label{font-size:14px;font-weight:600}
+.campo input{height:48px;padding:0 14px;border:1px solid #C3CBD6;border-radius:10px;background:#fff;font-size:16px;color:var(--tinta)}
+.campo input:focus{outline:2px solid var(--azul);outline-offset:1px;border-color:var(--azul)}
+.btn{min-height:48px;border-radius:12px;border:1.5px solid var(--azul);background:#fff;color:var(--azul);font-size:16px;font-weight:600;padding:0 16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn.pri{background:var(--azul);color:#fff}
+.btn.pri:hover{background:var(--azul-esc)}
+.btn:disabled{opacity:.6;cursor:default}
+.erro{color:var(--erro);font-size:14px;line-height:20px;min-height:20px;margin:0}
+.ou{display:flex;align-items:center;gap:12px;color:var(--suave);font-size:13px}
+.ou::before,.ou::after{content:"";flex:1;height:1px;background:var(--borda)}
+.rodape{margin-top:auto;text-align:center;font-size:13px;color:var(--suave)}
+/* início */
+.inicio{max-width:720px;margin:0 auto;width:100%;padding:28px 20px 32px;display:flex;flex-direction:column;gap:18px}
+.topo{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.topo p{margin:0;font-size:14px;color:var(--suave)}
+.topo h1{margin:2px 0 0;font-size:24px;letter-spacing:-.3px}
+.acoes{display:flex;gap:8px}
+.mini{min-height:44px;padding:0 14px;border-radius:22px;border:1px solid var(--borda);background:#fff;color:var(--tinta);font-size:14px;font-weight:500;cursor:pointer}
+h2{margin:6px 0 0;font-size:15px}
+.grade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(min-width:620px){.grade{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.mod{min-height:104px;padding:14px;border-radius:14px;background:var(--azul-cl);border:1px solid #CFDDF2;color:var(--tinta);text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:8px;cursor:pointer;font-size:15px}
+.mod:hover{border-color:var(--azul)}
+.mod b{font-size:15px}
+.mod small{font-size:12.5px;color:var(--suave);line-height:17px}
+.mod.largo{grid-column:1/-1}
+.mod svg{width:26px;height:26px;stroke:var(--azul);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.status{font-size:12px;font-weight:600}
+.status.off{color:#8A3B07}
+.aviso{background:#FFF4E8;border:1px solid #EBC59C;border-radius:12px;padding:12px 14px;font-size:14px;line-height:20px}
+/* módulo */
+.barra{height:52px;display:flex;align-items:center;gap:10px;padding:0 10px;background:var(--azul);color:#fff;flex-shrink:0;padding-top:env(safe-area-inset-top)}
+.barra button{min-height:40px;border:none;background:rgba(255,255,255,.14);color:#fff;border-radius:10px;padding:0 12px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px}
+.barra .nome{font-weight:600;font-size:16px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#quadro{flex:1;width:100%;border:0;background:#fff}
+.carga{position:fixed;inset:0;background:rgba(245,247,250,.85);display:flex;align-items:center;justify-content:center;font-weight:600;z-index:50}
+</style>
+</head>
+<body>
+
+<!-- ENTRAR -->
+<section class="tela" id="t-login" hidden>
+  <div class="login">
+    <div class="marca">
+      <div class="logo"><svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-5 9 5-9 5-9-5z"/><path d="M7 11.5v4.5c0 1.5 2.2 3 5 3s5-1.5 5-3v-4.5"/></svg></div>
+      <h1>EMFAL</h1>
+      <p>Escola Municipal Francisca Alves</p>
+    </div>
+    <form id="f-login" autocomplete="on">
+      <div class="campo"><label for="l-usu">Usuário</label><input id="l-usu" autocomplete="username" autocapitalize="none" spellcheck="false"></div>
+      <div class="campo"><label for="l-sen">Senha</label><input id="l-sen" type="password" autocomplete="current-password"></div>
+      <p class="erro" id="l-erro" role="alert"></p>
+      <button class="btn pri" type="submit" id="l-bt">Entrar</button>
+    </form>
+    <div class="ou">ou</div>
+    <a class="btn" href="#aluno">Sou estudante: fazer prova</a>
+    <p class="rodape">Um login para todos os módulos · mesmo usuário e senha do Corretor EMFAL</p>
+  </div>
+</section>
+
+<!-- INÍCIO -->
+<section class="tela" id="t-inicio" hidden>
+  <div class="inicio">
+    <div class="topo">
+      <div><p id="i-saud">Olá,</p><h1 id="i-nome"></h1></div>
+      <div class="acoes"><button class="mini" type="button" id="b-conta">Conta</button><button class="mini" type="button" id="b-sair">Sair</button></div>
+    </div>
+    <div class="aviso" id="i-aviso" hidden></div>
+    <h2>Módulos</h2>
+    <div class="grade" id="grade"></div>
+    <p class="rodape" id="i-rodape"></p>
+  </div>
+</section>
+
+<!-- MÓDULO -->
+<section class="tela" id="t-mod" hidden style="height:100dvh">
+  <div class="barra">
+    <button type="button" id="b-voltar" aria-label="Voltar ao início"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Início</button>
+    <span class="nome" id="m-nome"></span>
+  </div>
+  <iframe id="quadro" title="Módulo" allow="camera; microphone; fullscreen; clipboard-read; clipboard-write; screen-wake-lock" allowfullscreen></iframe>
+</section>
+
+<div class="carga" id="carga" hidden><span id="cargaMsg">Carregando…</span></div>
+
+<script src="https://emfalped-source.github.io/corretor/conta-emfal.js"></script>
+<script>
+'use strict';
+// Cada módulo é um app que já existe, no mesmo endereço (emfalped-source.github.io),
+// então todos leem a sessão guardada aqui. Nenhum app atual foi alterado.
+var BASE = 'https://emfalped-source.github.io/';
+var CORRETOR_API = 'https://script.google.com/macros/s/AKfycbzCbPfrmF1AZhXP2xh0Se-mMQUJlWqbTkCZ8doxeNOsn5XHBE-2YMW-M6T4_R3BtBrF/exec';
+var MODULOS = [
+  { id: 'corretor', nome: 'Corretor', desc: 'Correção de provas por foto', url: BASE + 'corretor/', chave: 'corretor_sessao', api: null,
+    icone: '<path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M8 12l3 3 5-6"/>' },
+  { id: 'prova', nome: 'Prova Online', desc: 'Provas no tablet com cronômetro', url: BASE + 'prova/#professor', chave: 'corretor_sessao', api: null,
+    icone: '<rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M12 11v2l1 1"/>' },
+  { id: 'relatorios', nome: 'Relatórios', desc: 'Relatório de desenvolvimento do estudante', url: BASE + 'relatorios/', chave: 'relatorios_sessao',
+    api: 'https://script.google.com/macros/s/AKfycbyydNXf359Ht_iY7sAZY1oEONY5Qj9NYPIVmG6mzXav2TF5NBHjw7rjgUMmlDTa_RaUTg/exec',
+    icone: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>' },
+  { id: 'curriculo', nome: 'Currículo em Ação', desc: 'Habilidades BNCC/CRMG por ano', url: BASE + 'curriculo/', chave: 'curriculo_token', soToken: true,
+    api: 'https://script.google.com/macros/s/AKfycbzJqB22B9ioE8b23FEcwhbbQVYcDzB-zPf8-rR-lcElNmDFOgpTM0WEsaryjP3FFSZYkQ/exec',
+    icone: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>' },
+  { id: 'ocorrencias', nome: 'Ocorrências', desc: 'Todos os professores, em qualquer turma', url: BASE + 'ocorrencias/', chave: 'ocorrencias_sessao', largo: true,
+    api: 'https://script.google.com/macros/s/AKfycbxIpFtb_w_yUXQ7pixFZsoAJDxPT9jnye2mW7JvxCoLhpxWx-swCn_HkLrxPrZxbh4qEQ/exec',
+    icone: '<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>' }
+];
+var ALUNO = { id: 'aluno', nome: 'Prova do estudante', url: BASE + 'prova/' };
+var CHAVE = 'superapp_sessao';
+
+function $(s) { return document.querySelector(s); }
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
+function carga(on, msg) { $('#carga').hidden = !on; if (msg) $('#cargaMsg').textContent = msg; }
+function nomeCurto(n) { n = String(n || '').trim().split(/\s+/)[0] || ''; return n.charAt(0).toUpperCase() + n.slice(1).toLowerCase(); }
+
+function chamar(url, fn, args) {
+  return fetch(url, { method: 'POST', body: JSON.stringify({ fn: fn, args: args || [] }), headers: { 'Content-Type': 'text/plain;charset=utf-8' }, credentials: 'omit', redirect: 'follow' })
+    .catch(function () { throw new Error('Sem conexão com a internet. Confira e tente de novo.'); })
+    .then(function (r) { if (!r.ok) throw new Error('O servidor não respondeu (erro ' + r.status + '). Tente de novo.'); return r.text(); })
+    .then(function (t) {
+      var j; try { j = JSON.parse(t); } catch (e) { throw new Error('O servidor está ocupado. Tente de novo em instantes.'); }
+      if (j && j.ok) return j.res;
+      throw new Error(String((j && j.erro) || 'Erro desconhecido.').replace(/^Error: /, '').replace(/^(SESSAO|TROCAR): ?/, ''));
+    });
+}
+
+// ---------- sessão ----------
+var SESS = null;
+try { SESS = JSON.parse(lsGet(CHAVE) || 'null'); } catch (e) { SESS = null; }
+function ligado(m) { var v = lsGet(m.chave); return !!(v && v !== 'null' && v !== '""'); }
+
+function entrarTudo(u, s) {
+  carga(true, 'Entrando…');
+  return chamar(CORRETOR_API, 'entrar', [u, s]).then(function (r) {
+    if (r.eu && r.eu.trocarSenha) {
+      carga(false);
+      if (!window.ContaEMFAL) throw new Error('Sua senha é provisória. Troque a senha no Corretor EMFAL e entre de novo.');
+      ContaEMFAL.abrir({ usuario: u, senha: s, obrigatoria: true, aoTerminar: function (res) { if (res && res.trocouSenha) entrarTudo(u, res.senha).catch(function (e) { $('#l-erro').textContent = e.message; }); } });
+      return;
+    }
+    lsSet('corretor_sessao', JSON.stringify(r));
+    carga(true, 'Abrindo os módulos…');
+    // os outros módulos têm servidor próprio: entra em todos de uma vez com o mesmo usuário e senha
+    var outros = MODULOS.filter(function (m) { return m.api; });
+    return Promise.all(outros.map(function (m) {
+      return chamar(m.api, 'entrar', [u, s]).then(function (x) {
+        lsSet(m.chave, m.soToken ? x.token : JSON.stringify(x)); return null;
+      }, function (e) { lsSet(m.chave, null); return m.nome; });
+    })).then(function (falhas) {
+      SESS = { eu: r.eu, desde: new Date().toISOString(), falhas: falhas.filter(Boolean) };
+      lsSet(CHAVE, JSON.stringify(SESS));
+      carga(false); $('#l-sen').value = '';
+      ir('');
+    });
+  }).catch(function (e) { carga(false); throw e; });
+}
+
+function sairTudo() {
+  var feitos = {};
+  MODULOS.forEach(function (m) {
+    var v = lsGet(m.chave); if (!v || feitos[m.chave]) return; feitos[m.chave] = 1;
+    var tk = m.soToken ? v : (function () { try { return JSON.parse(v).token; } catch (e) { return ''; } })();
+    if (tk) chamar(m.api || CORRETOR_API, 'sair', [tk]).catch(function () {});
+    lsSet(m.chave, null);
+  });
+  SESS = null; lsSet(CHAVE, null); ir('');
+}
+
+// ---------- telas ----------
+function mostrar(id) { ['t-login', 't-inicio', 't-mod'].forEach(function (t) { $('#' + t).hidden = t !== id; }); }
+
+function renderInicio() {
+  var h = new Date().getHours();
+  $('#i-saud').textContent = h < 12 ? 'Bom dia,' : h < 18 ? 'Boa tarde,' : 'Boa noite,';
+  $('#i-nome').textContent = nomeCurto(SESS.eu && SESS.eu.nome) || 'professor(a)';
+  $('#grade').innerHTML = MODULOS.map(function (m) {
+    var on = ligado(m);
+    return '<button type="button" class="mod' + (m.largo ? ' largo' : '') + '" data-mod="' + m.id + '">' +
+      '<svg aria-hidden="true" viewBox="0 0 24 24">' + m.icone + '</svg>' +
+      '<span><b>' + esc(m.nome) + '</b><br><small>' + esc(m.desc) + '</small></span>' +
+      (on ? '' : '<span class="status off">Entre de novo neste módulo</span>') + '</button>';
+  }).join('');
+  var f = (SESS.falhas || []).filter(function (n) { return MODULOS.some(function (m) { return m.nome === n && !ligado(m); }); });
+  $('#i-aviso').hidden = !f.length;
+  if (f.length) $('#i-aviso').textContent = 'Não consegui abrir ' + f.join(' e ') + ' agora. Ao tocar no módulo, ele pede o usuário e a senha só daquela vez.';
+  $('#i-rodape').textContent = SESS.eu && SESS.eu.perfil === 'coordenacao' ? 'Perfil: coordenação · vê todas as turmas' : 'Ocorrências: qualquer turma · demais módulos: só as suas turmas';
+  mostrar('t-inicio');
+}
+
+function abrirModulo(m) {
+  $('#m-nome').textContent = m.nome;
+  var q = $('#quadro');
+  if (q.dataset.mod !== m.id) { q.dataset.mod = m.id; q.src = m.url; }
+  mostrar('t-mod');
+}
+
+// rotas: #corretor, #relatorios… (o botão Voltar do celular volta ao início)
+function ir(rota) { if (location.hash.slice(1) === rota) rotear(); else location.hash = rota; }
+function rotear() {
+  var r = location.hash.slice(1);
+  if (r === 'aluno') return abrirModulo(ALUNO);
+  if (!SESS) { var q = $('#quadro'); q.src = 'about:blank'; q.dataset.mod = ''; mostrar('t-login'); return; }
+  var m = MODULOS.filter(function (x) { return x.id === r; })[0];
+  if (m) abrirModulo(m); else renderInicio();
+}
+window.addEventListener('hashchange', rotear);
+
+$('#f-login').addEventListener('submit', function (ev) {
+  ev.preventDefault();
+  var u = $('#l-usu').value.trim(), s = $('#l-sen').value;
+  if (!u || !s) { $('#l-erro').textContent = 'Preencha o usuário e a senha.'; return; }
+  $('#l-erro').textContent = ''; $('#l-bt').disabled = true;
+  entrarTudo(u, s).catch(function (e) { $('#l-erro').textContent = e.message; }).then(function () { $('#l-bt').disabled = false; });
+});
+$('#grade').addEventListener('click', function (ev) { var b = ev.target.closest('[data-mod]'); if (b) ir(b.dataset.mod); });
+$('#b-voltar').addEventListener('click', function () { ir(''); });
+$('#b-sair').addEventListener('click', sairTudo);
+$('#b-conta').addEventListener('click', function () {
+  if (window.ContaEMFAL) ContaEMFAL.abrir({ usuario: (SESS && SESS.eu && SESS.eu.usuario) || '' });
+  else alert('Não foi possível abrir a conta. Verifique a internet.');
+});
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
+rotear();
+</script>
+</body>
+</html>
