@@ -55,6 +55,12 @@ h2{margin:6px 0 0;font-size:15px}
 .mod svg{width:26px;height:26px;stroke:var(--azul);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .status{font-size:12px;font-weight:600}
 .status.off{color:#8A3B07}
+.cfg{display:flex;flex-direction:column;gap:12px}
+.cfg-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;background:#fff;border:1px solid var(--borda);color:var(--tinta);text-decoration:none;text-align:left;cursor:pointer;font-size:15px;width:100%}
+.cfg-item:hover{border-color:var(--azul)}
+.cfg-item svg{width:24px;height:24px;flex-shrink:0;stroke:var(--azul);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cfg-item small{display:block;color:var(--suave);font-size:13px;line-height:18px;margin-top:2px}
+.dev{border-color:#EBC59C;background:#FFF9F2}
 .aviso{background:#FFF4E8;border:1px solid #EBC59C;border-radius:12px;padding:12px 14px;font-size:14px;line-height:20px}
 /* módulo */
 .barra{height:52px;display:flex;align-items:center;gap:10px;padding:0 10px;background:var(--azul);color:#fff;flex-shrink:0;padding-top:env(safe-area-inset-top)}
@@ -91,12 +97,36 @@ h2{margin:6px 0 0;font-size:15px}
   <div class="inicio">
     <div class="topo">
       <div><p id="i-saud">Olá,</p><h1 id="i-nome"></h1></div>
-      <div class="acoes"><button class="mini" type="button" id="b-conta">Conta</button><button class="mini" type="button" id="b-sair">Sair</button></div>
+      <div class="acoes"><button class="mini" type="button" id="b-config" hidden>Configurações</button><button class="mini" type="button" id="b-conta">Conta</button><button class="mini" type="button" id="b-sair">Sair</button></div>
     </div>
     <div class="aviso" id="i-aviso" hidden></div>
     <h2>Módulos</h2>
     <div class="grade" id="grade"></div>
     <p class="rodape" id="i-rodape"></p>
+  </div>
+</section>
+
+<!-- CONFIGURAÇÕES (só coordenação) -->
+<section class="tela" id="t-config" hidden>
+  <div class="inicio">
+    <div class="topo">
+      <div><p>Só a coordenação vê esta área</p><h1>Configurações</h1></div>
+      <div class="acoes"><button class="mini" type="button" id="b-cfg-voltar">Início</button></div>
+    </div>
+    <h2>Cadastros dos apps</h2>
+    <div class="cfg">
+      <button type="button" class="cfg-item" data-ir="cfg-usuarios"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 12 0v1"/><path d="M19 8v6M16 11h6"/></svg><span><b>Professores, usuários e senhas</b><small>Cadastrar professor, criar senha provisória, mudar perfil (professor ou coordenação), desativar conta e definir as turmas de cada um. Vale para todos os módulos.</small></span></button>
+      <button type="button" class="cfg-item" data-ir="cfg-turmas"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 12 0v1M16 4a4 4 0 0 1 0 8M22 21v-1a6 6 0 0 0-4-5.7"/></svg><span><b>Turmas e estudantes</b><small>Turmas da escola e lista de estudantes usadas no Corretor, Prova Online, Ocorrências e Relatórios.</small></span></button>
+    </div>
+    <h2>Segurança dos dados</h2>
+    <div class="cfg">
+      <a class="cfg-item" href="https://drive.google.com/drive/u/2/search?q=%22Backup%20Apps%20EMFAL%22" target="_blank" rel="noopener"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg><span><b>Cópias de segurança</b><small>Pasta "Backup Apps EMFAL" no Drive da escola. Cópia automática toda segunda de madrugada; guarda as 8 últimas.</small></span></a>
+    </div>
+    <div id="cfg-dev" hidden>
+      <h2>Desenvolvedor (só pedro.coord)</h2>
+      <div class="cfg" id="cfg-dev-lista"></div>
+      <p class="rodape" style="text-align:left">Para salvar qualquer mudança no código continua sendo preciso entrar no GitHub (emfalped-source) e no Google (emfal.ped). É isso que impede outra pessoa de mexer, mesmo que veja esta tela.</p>
+    </div>
   </div>
 </section>
 
@@ -132,6 +162,21 @@ var MODULOS = [
   { id: 'ocorrencias', nome: 'Ocorrências', desc: 'Todos os professores, em qualquer turma', url: BASE + 'ocorrencias/', chave: 'ocorrencias_sessao', largo: true,
     api: 'https://script.google.com/macros/s/AKfycbxIpFtb_w_yUXQ7pixFZsoAJDxPT9jnye2mW7JvxCoLhpxWx-swCn_HkLrxPrZxbh4qEQ/exec',
     icone: '<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>' }
+];
+var CONFIG = [
+  { id: 'cfg-usuarios', nome: 'Professores, usuários e senhas', url: BASE + 'corretor/#cadastros' },
+  { id: 'cfg-turmas', nome: 'Turmas e estudantes', url: BASE + 'corretor/#turmas' }
+];
+var DEV_USUARIO = 'pedro.coord';
+var DEV = [
+  ['Código do Super App EMFAL', 'https://github.com/emfalped-source/emfal'],
+  ['Código do Corretor', 'https://github.com/emfalped-source/corretor'],
+  ['Código da Prova Online', 'https://github.com/emfalped-source/prova'],
+  ['Código dos Relatórios', 'https://github.com/emfalped-source/relatorios'],
+  ['Código do Currículo em Ação', 'https://github.com/emfalped-source/curriculo'],
+  ['Código das Ocorrências', 'https://github.com/emfalped-source/ocorrencias'],
+  ['Servidores (Apps Script da conta emfal.ped)', 'https://script.google.com/u/2/home'],
+  ['Publicação dos sites (GitHub Pages)', 'https://github.com/emfalped-source/emfal/settings/pages']
 ];
 var ALUNO = { id: 'aluno', nome: 'Prova do estudante', url: BASE + 'prova/' };
 var CHAVE = 'superapp_sessao';
@@ -197,9 +242,22 @@ function sairTudo() {
 }
 
 // ---------- telas ----------
-function mostrar(id) { ['t-login', 't-inicio', 't-mod'].forEach(function (t) { $('#' + t).hidden = t !== id; }); }
+function mostrar(id) { ['t-login', 't-inicio', 't-config', 't-mod'].forEach(function (t) { $('#' + t).hidden = t !== id; }); }
+
+function ehCoord() { return !!(SESS && SESS.eu && SESS.eu.perfil === 'coordenacao'); }
+function ehDev() { return !!(SESS && SESS.eu && String(SESS.eu.usuario).toLowerCase() === DEV_USUARIO); }
+
+function renderConfig() {
+  var dev = ehDev();
+  $('#cfg-dev').hidden = !dev;
+  if (dev) $('#cfg-dev-lista').innerHTML = DEV.map(function (d) {
+    return '<a class="cfg-item dev" href="' + d[1] + '" target="_blank" rel="noopener"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg><span><b>' + esc(d[0]) + '</b><small>' + esc(d[1].replace('https://', '')) + '</small></span></a>';
+  }).join('');
+  mostrar('t-config');
+}
 
 function renderInicio() {
+  $('#b-config').hidden = !ehCoord();
   var h = new Date().getHours();
   $('#i-saud').textContent = h < 12 ? 'Bom dia,' : h < 18 ? 'Boa tarde,' : 'Boa noite,';
   $('#i-nome').textContent = nomeCurto(SESS.eu && SESS.eu.nome) || 'professor(a)';
@@ -230,6 +288,11 @@ function rotear() {
   var r = location.hash.slice(1);
   if (r === 'aluno') return abrirModulo(ALUNO);
   if (!SESS) { var q = $('#quadro'); q.src = 'about:blank'; q.dataset.mod = ''; mostrar('t-login'); return; }
+  if (r === 'config' || r.indexOf('cfg-') === 0) {
+    if (!ehCoord()) return ir('');
+    var c = CONFIG.filter(function (x) { return x.id === r; })[0];
+    return c ? abrirModulo(c) : renderConfig();
+  }
   var m = MODULOS.filter(function (x) { return x.id === r; })[0];
   if (m) abrirModulo(m); else renderInicio();
 }
@@ -243,7 +306,10 @@ $('#f-login').addEventListener('submit', function (ev) {
   entrarTudo(u, s).catch(function (e) { $('#l-erro').textContent = e.message; }).then(function () { $('#l-bt').disabled = false; });
 });
 $('#grade').addEventListener('click', function (ev) { var b = ev.target.closest('[data-mod]'); if (b) ir(b.dataset.mod); });
-$('#b-voltar').addEventListener('click', function () { ir(''); });
+$('#b-voltar').addEventListener('click', function () { ir(location.hash.indexOf('#cfg-') === 0 ? 'config' : ''); });
+$('#b-config').addEventListener('click', function () { ir('config'); });
+$('#b-cfg-voltar').addEventListener('click', function () { ir(''); });
+$('#t-config').addEventListener('click', function (ev) { var b = ev.target.closest('[data-ir]'); if (b) ir(b.dataset.ir); });
 $('#b-sair').addEventListener('click', sairTudo);
 $('#b-conta').addEventListener('click', function () {
   if (window.ContaEMFAL) ContaEMFAL.abrir({ usuario: (SESS && SESS.eu && SESS.eu.usuario) || '' });
