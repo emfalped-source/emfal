@@ -1,6 +1,6 @@
 // Guarda só a casca do super app para abrir mais rápido. Os módulos e os dados vêm sempre da internet.
-var CACHE = 'superapp-v5';
-var CASCA = ['./', 'index.html', 'manifest.webmanifest', 'icone-192.png', 'icone-512.png'];
+var CACHE = 'superapp-v6';
+var CASCA = ['./', 'index.html', 'manifest.webmanifest', 'icone-192.png?v=3', 'icone-512.png?v=3'];
 self.addEventListener('install', function (e) { e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(CASCA); })); self.skipWaiting(); });
 self.addEventListener('activate', function (e) {
   e.waitUntil(caches.keys().then(function (ks) { return Promise.all(ks.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); })); }));
