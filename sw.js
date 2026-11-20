@@ -1,5 +1,5 @@
 // Guarda só a casca do super app para abrir mais rápido. Os módulos e os dados vêm sempre da internet.
-var CACHE = 'superapp-v4';
+var CACHE = 'superapp-v5';
 var CASCA = ['./', 'index.html', 'manifest.webmanifest', 'icone-192.png', 'icone-512.png'];
 self.addEventListener('install', function (e) { e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(CASCA); })); self.skipWaiting(); });
 self.addEventListener('activate', function (e) {
@@ -10,7 +10,7 @@ self.addEventListener('fetch', function (e) {
   var u = new URL(e.request.url);
   if (e.request.method !== 'GET' || u.origin !== location.origin || u.href.indexOf(self.registration.scope) !== 0) return;
   // rede primeiro (sempre a versão nova); sem internet, usa a cópia guardada
-  e.respondWith(fetch(e.request).then(function (r) {
+  e.respondWith(fetch(u.href, { cache: 'no-cache', credentials: 'same-origin' }).then(function (r) {
     var c = r.clone(); caches.open(CACHE).then(function (k) { k.put(e.request, c); }); return r;
   }).catch(function () { return caches.match(e.request).then(function (r) { return r || caches.match('index.html'); }); }));
 });
