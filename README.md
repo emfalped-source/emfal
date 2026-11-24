@@ -11,3 +11,8 @@ Um ícone e um login para os apps da Escola Municipal Francisca Alves (EMFAL).
 - Instalável no celular (PWA): no Chrome, menu ⋮ › Instalar app / Adicionar à tela inicial.
 
 Endereço: https://emfalped-source.github.io/emfal/
+
+## Autoria e direitos
+
+© 2026 Pedro Ricardo Motta Mattos Fernandez (@pedror_motta). Todos os direitos reservados — ver [LICENSE](LICENSE).
+O código está público só porque o GitHub Pages exige; isso não autoriza cópia nem reuso fora da EMFAL.
