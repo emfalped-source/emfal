@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1F5C6B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Coordenador">
+<title>Coordenador Virtual</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icone-192.png">
+<link rel="apple-touch-icon" href="icone-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Condensed:wght@700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: ferramenta de trabalho pessoal, calma e decidida, como uma prancheta de coordenação
+   IDEA: a ficha de atendimento da coordenação: estudante, situação, análise, mensagem, decisão
+   PICTURE: o próprio fluxo, com o semáforo de nível logo abaixo da situação escolhida
+   COLOUR and TYPE: azul-petróleo, terracota e areia da EMFAL; Sofia Sans Condensed + Instrument Sans
+   LAYOUT: uma coluna calma (máx. 760px), passos numerados de cima para baixo, abas no topo */
+:root{color-scheme:light dark;--bg:#F5F1E8;--card:#fff;--ink:#16202E;--mut:#4A5565;--pet:#1F5C6B;--ter:#B5532F;--line:#D5DBE3;--al:#fbe9e6;--n1:#2f7d5b;--n2:#b9780b;--n3:#c2552d;--n4:#b3261e}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#10191c;--card:#172429;--ink:#ecf1ef;--mut:#9fb0b2;--pet:#5fb3c4;--ter:#e0825d;--line:#2a3b40;--al:#3a1d1b}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#10191c;--card:#172429;--ink:#ecf1ef;--mut:#9fb0b2;--pet:#5fb3c4;--ter:#e0825d;--line:#2a3b40;--al:#3a1d1b}
+:root[data-theme=light]{color-scheme:light}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Instrument Sans",system-ui,sans-serif;overflow-x:clip}
+header{background:#1F5C6B;color:#fff;padding:16px max(5vw,16px) 0}
+.hw{max-width:760px;margin:0 auto}
+h1{font:800 clamp(30px,7vw,42px)/1.05 "Sofia Sans Condensed",sans-serif;margin:0 0 4px}
+header p{margin:0 0 4px;opacity:.85;font-size:15px}
+#nuvem{font-size:13px;opacity:.9;margin:0 0 10px}
+nav{display:flex;gap:4px;overflow-x:auto}
+nav button{background:transparent;border:0;color:#fff;opacity:.8;font:600 16px "Instrument Sans",system-ui,sans-serif;padding:12px 16px;border-radius:10px 10px 0 0;min-height:44px;cursor:pointer;flex:none}
+nav button.on{background:var(--bg);color:var(--ink);opacity:1}
+main{max-width:760px;margin:0 auto;padding:16px max(4vw,12px) 80px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+h2{font:700 24px/1.1 "Sofia Sans Condensed",sans-serif;margin:0 0 10px;color:var(--pet)}
+h3{font-size:16px;margin:16px 0 6px}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 4px}
+input,select,textarea{width:100%;font:16px "Instrument Sans",sans-serif;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);min-height:44px}
+textarea{min-height:80px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:3px solid var(--ter);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:9px 14px;font:500 15px "Instrument Sans",system-ui,sans-serif;min-height:44px;cursor:pointer}
+.chip.on{background:var(--pet);border-color:var(--pet);color:#fff}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;background:var(--bg);font-weight:500;margin:0}
+.opt input{width:20px;height:20px;min-height:20px;margin-top:2px;flex:none}
+.opt.on{border-color:var(--pet);box-shadow:inset 0 0 0 1px var(--pet)}
+.opt small{display:block;color:var(--mut);font-weight:400}
+.rec{font-size:12px;background:var(--pet);color:#fff;border-radius:6px;padding:1px 6px;margin-left:6px;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:10px;padding:11px 16px;font:600 16px "Instrument Sans",system-ui,sans-serif;min-height:44px;cursor:pointer;text-decoration:none;background:var(--pet);color:#fff}
+.btn.alt{background:transparent;color:var(--pet);border:1px solid var(--pet)}
+.btn.wa{background:#1f8f4e;color:#fff}
+.btn.ter{background:var(--ter);color:#fff}
+.btn[disabled]{opacity:.5;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.sug{border:1px solid var(--line);border-radius:10px;margin-top:6px;max-height:260px;overflow:auto}
+.sug button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 12px;font:15px "Instrument Sans",system-ui,sans-serif;cursor:pointer;min-height:44px}
+.sel{background:var(--bg);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:15px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.sel button{border:0;background:none;color:var(--ter);font:600 14px "Instrument Sans",system-ui,sans-serif;cursor:pointer;min-height:44px}
+.nivel{display:flex;gap:14px;align-items:center;border-radius:12px;padding:14px;color:#fff}
+.nivel b{font:800 46px/1 "Sofia Sans Condensed",sans-serif}
+.nivel strong{font:700 22px/1.1 "Sofia Sans Condensed",sans-serif;display:block}
+.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:10px 0 2px}
+.meter i{height:8px;border-radius:4px;background:var(--line)}
+ul{margin:4px 0;padding-left:20px}li{margin:4px 0}
+.mut{color:var(--mut);font-size:14px}
+.empty{color:var(--mut);text-align:center;padding:22px 10px}
+.alerta{border-left:4px solid var(--n4);padding:8px 12px;background:var(--al);border-radius:6px;margin:10px 0;font-size:15px}
+.chk{display:flex;gap:10px;align-items:center;font-weight:500;margin:6px 0;font-size:15px}
+.chk input{width:22px;min-height:22px;height:22px;flex:none}
+.ia{white-space:pre-wrap;background:var(--bg);border-radius:10px;padding:12px;font-size:15px;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:15px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.tag{display:inline-block;border-radius:6px;padding:1px 8px;color:#fff;font-size:13px;font-weight:600;white-space:nowrap}
+.del{border:0;background:none;color:var(--ter);font:600 14px "Instrument Sans",system-ui,sans-serif;cursor:pointer;min-height:36px;padding:0}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+.toast.on{opacity:1}
+.scroll{overflow-x:auto}
+@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:6.5em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:6em;margin-inline-start:-6.5em;color:var(--mut)}.stack td:empty{display:none}}
+@media(prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+<header><div class="hw">
+<h1>Coordenador Virtual</h1>
+<p>Analisa o caso, sugere o encaminhamento e deixa a mensagem pronta. Quem decide é você.</p>
+<p id="nuvem">Conectando…</p>
+<nav id="tabs"><button data-t="caso" class="on">Novo caso</button><button data-t="hist">Histórico</button><button data-t="cont">Contatos</button></nav>
+</div></header>
+<main>
+<section id="v-login" hidden><div class="card" style="max-width:440px;margin:24px auto">
+ <h2>Entrar</h2>
+ <p class="mut">Uso pessoal da coordenação. Os dados ficam na sua planilha do Google Drive.</p>
+ <form id="fLogin">
+  <div id="urlBox"><label for="lUrl">Endereço do servidor (Apps Script, termina em /exec)</label><input id="lUrl" inputmode="url" autocomplete="off"></div>
+  <label for="lSen">Senha</label><input id="lSen" type="password" autocomplete="current-password">
+  <label class="chk"><input type="checkbox" id="lManter" checked>Manter conectado neste aparelho</label>
+  <div class="row"><button class="btn" type="submit" id="lBtn">Entrar</button></div>
+  <p id="lErro" class="alerta" hidden></p>
+ </form>
+</div></section>
+<section id="v-caso">
+ <div class="card">
+  <h2>1. Estudante</h2>
+  <input id="busca" placeholder="Digite o nome ou a turma" autocomplete="off" aria-label="Buscar estudante">
+  <div id="sug"></div><div id="selAluno"></div>
+ </div>
+ <div class="card">
+  <h2>2. Situação</h2>
+  <div class="chips" id="cats"></div>
+  <div id="subsBox" hidden><label>O que aconteceu</label><div class="chips" id="subs"></div></div>
+  <div id="flags"></div>
+ </div>
+ <div id="analise"></div>
+</section>
+<section id="v-hist" hidden><div class="card"><h2>Histórico de casos</h2><input id="hbusca" placeholder="Filtrar por nome, turma ou situação"><div id="hlist" style="margin-top:10px"></div></div></section>
+<section id="v-cont" hidden>
+ <div class="card">
+  <h2>Planilha de telefones</h2>
+  <p class="mut">Importe a planilha (.xlsx ou .csv) com colunas de nome do estudante, turma, responsável e telefone/WhatsApp. A importação substitui a lista anterior na sua planilha do Google; o histórico de casos é mantido.</p>
+  <input type="file" id="arq" accept=".xlsx,.xls,.csv" aria-label="Arquivo da planilha">
+  <div id="impinfo" class="mut" style="margin-top:8px"></div>
+ </div>
+ <div class="card">
+  <h2>Adicionar ou corrigir um estudante</h2>
+  <label for="nNome">Nome completo</label><input id="nNome">
+  <label for="nTurma">Turma</label><input id="nTurma" placeholder="Ex.: FRCAA1MA">
+  <label for="nResp">Responsável</label><input id="nResp" placeholder="Ex.: Maria (mãe)">
+  <label for="nTel">Telefone(s) com DDD</label><input id="nTel" placeholder="Ex.: 31 99999-0000 / 31 98888-0000" inputmode="tel">
+  <div class="row"><button class="btn" id="nSalvar">Salvar estudante</button></div>
+ </div>
+ <div class="card"><h2>Estudantes cadastrados</h2><input id="cbusca" placeholder="Filtrar"><div id="clist" style="margin-top:10px"></div></div>
+</section>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script>
+{
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s??'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2400)};
+const LK='coordVirtual.v1',SK='coordVirtual.sessao',UK='coordVirtual.api';
+const API_PADRAO='';// endereço /exec do Apps Script (preenchido na implantação)
+let alunos=[],casos=[];
+const lsG=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsS=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
+let API=API_PADRAO||lsG(UK)||'',SESS=null;try{SESS=JSON.parse(lsG(SK)||'null')}catch(e){}
+if(SESS&&SESS.ate&&Date.now()>SESS.ate)SESS=null;
+const lerLocal=()=>{try{const r=JSON.parse(lsG(LK)||'null');if(r)return r}catch(e){}return null};
+const gravarLocal=()=>lsS(LK,JSON.stringify({alunos,casos}));
+{const l=lerLocal();if(l&&SESS){alunos=l.alunos||[];casos=l.casos||[]}}
+async function chamar(fn,...args){let r;
+ try{r=await fetch(API,{method:'POST',body:JSON.stringify({fn,args}),headers:{'Content-Type':'text/plain;charset=utf-8'},credentials:'omit',redirect:'follow'})}catch(e){throw new Error('Sem conexão com a internet.')}
+ if(!r.ok)throw new Error('O servidor não respondeu (erro '+r.status+').');
+ let j;try{j=JSON.parse(await r.text())}catch(e){throw new Error('O servidor está ocupado. Tente de novo.')}
+ if(j.ok)return j.res;const m=String(j.erro||'Erro desconhecido.');if(/^SESSAO/.test(m)){sairLocal();throw new Error('Sessão expirada. Entre de novo.')}throw new Error(m)}
+const comToken=(fn,...a)=>chamar(fn,SESS.token,...a);
+async function salvarAlunos(){gravarLocal();try{await comToken('salvarAlunos',alunos);toast('Contatos salvos na planilha')}catch(e){toast('Não salvou no servidor: '+e.message)}}
+async function salvarAluno(a){gravarLocal();try{await comToken('salvarAluno',a)}catch(e){toast('Não salvou no servidor: '+e.message)}}
+async function salvarCaso(c){casos.unshift(c);gravarLocal();renderHist();try{await comToken('salvarCaso',c)}catch(e){toast('Caso salvo só neste aparelho: '+e.message)}}
+async function apagarCaso(id){casos=casos.filter(c=>c.id!==id);gravarLocal();renderHist();try{await comToken('apagarCaso',id)}catch(e){toast('Não excluiu no servidor: '+e.message)}}
+function tela(t){$('#v-login').hidden=t!=='login';$('#tabs').hidden=t==='login';if(t==='login'){['caso','hist','cont'].forEach(x=>$('#v-'+x).hidden=true)}else{document.querySelector('#tabs button.on').click()}}
+function sairLocal(){SESS=null;lsS(SK,null);lsS(LK,null);alunos=[];casos=[];tela('login');$('#nuvem').textContent='Conecte-se para usar'}
+async function sincronizar(){const st=$('#nuvem');st.textContent='Atualizando…';
+ try{const d=await comToken('carregar');alunos=d.alunos||[];casos=d.casos||[];gravarLocal();st.innerHTML='Salvo na sua planilha do Google · <button id="sair" style="background:none;border:0;color:#fff;text-decoration:underline;font:inherit;cursor:pointer;padding:0">sair</button>';$('#sair').onclick=()=>{comToken('sair').catch(()=>{});sairLocal()}}
+ catch(e){st.textContent=SESS?'Sem conexão: mostrando a última cópia deste aparelho':'Conecte-se para usar'}
+ renderCont();renderHist();renderSel();if(st0.aid)analisar()}
+$('#urlBox').hidden=!!API_PADRAO;$('#lUrl').value=API;
+$('#fLogin').onsubmit=async e=>{e.preventDefault();const er=$('#lErro');er.hidden=true;
+ if(!API_PADRAO){API=$('#lUrl').value.trim();if(!/^https:\/\/script\.google\.com\/.+\/exec$/.test(API)){er.textContent='Cole o endereço do Apps Script que termina em /exec.';er.hidden=false;return}lsS(UK,API)}
+ $('#lBtn').disabled=true;$('#lBtn').textContent='Entrando…';
+ try{const r=await chamar('entrar',$('#lSen').value);SESS={token:r.token,ate:$('#lManter').checked?0:Date.now()+12*36e5};lsS(SK,JSON.stringify(SESS));$('#lSen').value='';tela('app');await sincronizar()}
+ catch(err){er.textContent=err.message;er.hidden=false}
+ $('#lBtn').disabled=false;$('#lBtn').textContent='Entrar'};
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+// ---------- regras ----------
+const NIV={1:['Comunicar a família','var(--n1)'],2:['Ligar para a família agora','var(--n2)'],3:['Convocar a família','var(--n3)'],4:['Emergência','var(--n4)']};
+const CANAIS={wa:['Só comunicar por WhatsApp','Mensagem informando o ocorrido'],lig:['Ligar e registrar no WhatsApp','Você liga; a mensagem fica como registro escrito'],conv:['Convocar a família','Mensagem pedindo comparecimento na escola'],samu:['Emergência','SAMU 192 primeiro, depois a família']};
+const NIV2CANAL={1:'wa',2:'lig',3:'conv',4:'samu'};
+const ASS='\n\nAtenciosamente,\nPedro Motta\nCoordenação Pedagógica – E. M. Francisca Alves';
+const quando=c=>`hoje${c.hora?`, por volta das ${c.hora.replace(':','h')}`:''}${c.local?`, ${c.local}`:''}`;
+const det=c=>{const d=(c.det||'').trim();return d?' '+d.charAt(0).toUpperCase()+d.slice(1).replace(/([^.!?])$/,'$1.'):''};
+const gen=(t,g)=>!g?t:t.replace(/([A-Za-zÀ-ú]+)\(a\)/g,(m,w)=>g==='m'?w:w==='ele'?'ela':w==='dele'?'dela':/o$/.test(w)?w.slice(0,-1)+'a':w);
+const ola=c=>c.resp?`Olá, ${c.resp}! Tudo bem?`:'Olá, família! Tudo bem?';
+const OBS24='\n\nPedimos que fiquem atentos nas próximas 24 horas. Se houver vômito, sonolência fora do normal, dor de cabeça forte, confusão ou desmaio, procurem atendimento médico imediatamente.';
+const FECHA={lig:'\n\nTentamos contato por telefone e deixamos esta mensagem como registro. Por favor, retorne a ligação ou responda por aqui assim que possível.',
+ conv:c=>`\n\nPor isso, solicitamos o comparecimento de um responsável na escola${c.cdia?` ${c.cdia}`:' (dia e horário a combinar)'}, para conversarmos com a coordenação. Caso não seja possível, por favor nos avise por aqui para remarcarmos.`};
+const R={
+ saude:{nome:'Saúde / acidente',subs:{
+  cabeca:{l:'Bateu a cabeça',n:2,ex:OBS24,ac:['Manter em observação, sentado e acompanhado; não dispensar sozinho','Ligar para a família agora; a mensagem fica como registro','Não oferecer medicamento','Registrar horário, como foi e quem atendeu'],por:['Pancada na cabeça pede contato por voz: a família precisa saber na hora e decidir se busca ou leva ao médico'],f:c=>`Informamos que ${c.nome} bateu a cabeça ${quando(c)}.${det(c)} Foi acolhido(a) pela equipe e está em observação.`,fim:'Estamos à disposição.'},
+  corte:{l:'Machucado / corte leve',n:1,ac:['Primeiros cuidados: lavar com água corrente e cobrir','Comunicar a família por WhatsApp','Se o corte for fundo ou não parar de sangrar, marque o sinal de alerta'],por:['Machucado leve, sem sinal de alerta: comunicar basta'],f:c=>`Informamos que ${c.nome} se machucou ${quando(c)}.${det(c)} Fizemos os primeiros cuidados e está bem.`,fim:'Seguiu as atividades normalmente. Estamos à disposição.'},
+  membro:{l:'Queda / dor no braço ou perna',n:2,ac:['Não forçar o movimento; manter em repouso','Ligar para a família e decidir juntos sobre atendimento','Com deformidade ou dor intensa, marque o sinal de alerta'],por:['Dor após queda pode ser torção ou fratura; a família precisa avaliar se leva ao médico'],f:c=>`Informamos que ${c.nome} sofreu uma queda ${quando(c)} e está sentindo dor.${det(c)} Está em repouso e acompanhado(a) pela equipe.`,fim:'Pedimos que entrem em contato para combinarmos se vão buscá-lo(a) ou levá-lo(a) para avaliação.'},
+  barriga:{l:'Dor de barriga / mal-estar',n:1,ac:['Acolher, oferecer água e observar por alguns minutos','Não oferecer medicamento','Se piorar ou persistir, ligar e pedir que a família busque'],por:['Mal-estar leve costuma passar com acolhimento; a família deve ficar ciente'],f:c=>`Informamos que ${c.nome} relatou dor de barriga/mal-estar ${quando(c)}.${det(c)} Foi acolhido(a) e está sendo observado(a).`,fim:'Se o mal-estar continuar, entraremos em contato para que venham buscá-lo(a). Caso prefiram buscar agora, é só nos avisar.'},
+  febre:{l:'Febre / vômito',n:2,ac:['Afastar do grupo, acomodar e acompanhar','Ligar e pedir que a família venha buscar','Não oferecer medicamento sem prescrição e autorização'],por:['Febre ou vômito impedem a permanência na escola e podem ser contagiosos'],f:c=>`Informamos que ${c.nome} apresentou febre/vômito ${quando(c)}.${det(c)} Está acomodado(a) e acompanhado(a) pela equipe.`,fim:'Pedimos, por gentileza, que venham buscá-lo(a) o quanto antes para os devidos cuidados.'}}},
+ comp:{nome:'Comportamento',subs:{
+  agressao:{l:'Agressão física',n:3,ac:['Separar os envolvidos e ouvir cada um em separado','Verificar se alguém se machucou (se sim, abra também um caso de saúde)','Registrar no app de Ocorrências','Comunicar as famílias de todos os envolvidos, inclusive de quem foi agredido','Informar a direção','Depois: conversa reflexiva e combinado por escrito com o estudante'],por:['Agressão física é falta grave e pede conversa presencial com a família'],f:c=>`Precisamos conversar sobre uma situação envolvendo ${c.nome} ${quando(c)}: houve uma agressão física.${det(c)} A situação já foi contida e registrada pela escola.`,fim:'Pedimos que conversem com ele(a) em casa sobre o ocorrido. Contamos com a parceria de vocês.'},
+  briga:{l:'Briga / discussão',n:1,ac:['Separar e ouvir os envolvidos','Mediar a conversa entre eles','Registrar no app de Ocorrências','Se houve ameaça ou foi a 2ª vez no mês: ligar ou convocar'],por:['Discussão sem agressão: comunicar a família costuma bastar; a reincidência leva a convocação'],f:c=>`Informamos que ${c.nome} se envolveu em uma discussão com colegas ${quando(c)}.${det(c)} A situação foi mediada pela coordenação e registrada.`,fim:'Pedimos que conversem com ele(a) em casa sobre o ocorrido. Contamos com vocês!'},
+  desrespeito:{l:'Desrespeito / ofensa',n:1,ac:['Conversar com o estudante e com quem foi ofendido','Propor reparação (pedido de desculpas, conversa mediada)','Registrar no app de Ocorrências'],por:['Primeira ocorrência deste tipo: comunicar e alinhar a conversa em casa'],f:c=>`Informamos que ${c.nome} teve uma atitude desrespeitosa ${quando(c)}.${det(c)} Já conversamos com ele(a) na escola e a situação foi registrada.`,fim:'Pedimos que reforcem essa conversa em casa. Contamos com a parceria de vocês!'},
+  indisciplina:{l:'Atrapalha a aula / indisciplina',n:1,ac:['Ouvir o professor e o estudante','Combinado de conduta com o estudante','Registrar no app de Ocorrências','Se repetir na semana, ligar para a família'],por:['Indisciplina pontual: o combinado com o estudante e a família ciente costumam resolver'],f:c=>`Informamos que ${c.nome} teve dificuldades de comportamento em sala ${quando(c)}, atrapalhando o andamento da aula.${det(c)} Já conversamos com ele(a) e fizemos um combinado.`,fim:'Pedimos que reforcem esse combinado em casa. Contamos com vocês!'},
+  bullying:{l:'Suspeita de bullying',n:3,ac:['Ouvir em separado quem sofre e quem pratica, com cuidado e sigilo','Registrar com detalhes (datas, testemunhas)','Convocar as famílias em horários separados','Envolver a direção e acompanhar nas semanas seguintes','Levar o tema para a turma (projeto Eu, o Outro e Nós)'],por:['Bullying é repetido e intencional: exige acompanhamento, não só comunicação','Se este estudante for quem sofre, ajuste a mensagem para acolher a família'],f:c=>`Gostaríamos de conversar com vocês sobre situações de convivência envolvendo ${c.nome} e alguns colegas.${det(c)}`,fim:'Estamos acompanhando de perto e contamos com vocês para conversar com ele(a) em casa.'},
+  patrimonio:{l:'Dano ao patrimônio',n:3,ac:['Registrar com foto e descrição do dano','Ouvir o estudante','Convocar a família e combinar a reparação, conforme o regimento','Informar a direção'],por:['Dano ao patrimônio envolve responsabilização e reparação, que se combinam pessoalmente'],f:c=>`Informamos que ${quando(c)} houve dano a um bem da escola envolvendo ${c.nome}.${det(c)} A situação foi registrada.`,fim:'Pedimos que conversem com ele(a) sobre o cuidado com o espaço coletivo.'},
+  saida:{l:'Saída sem autorização',n:2,ac:['Localizar o estudante imediatamente','Se saiu do prédio: ligar para a família na hora e informar a direção','Registrar horários (quando saiu, quando foi localizado)'],por:['Envolve a segurança do estudante; a família precisa saber na hora'],f:c=>`Informamos que ${c.nome} saiu ${c.local||'da sala'} sem autorização hoje${c.hora?`, por volta das ${c.hora.replace(':','h')}`:''}.${det(c)} A situação foi registrada.`,fim:'Pedimos que conversem com ele(a) sobre a importância de permanecer nos espaços combinados, para a segurança dele(a).'},
+  celular:{l:'Uso indevido do celular',n:1,ac:['Seguir a regra da escola para o celular','Registrar no app de Ocorrências'],por:['Ocorrência leve: comunicar e pedir apoio da família'],f:c=>`Informamos que ${c.nome} usou o celular em momento não permitido ${quando(c)}.${det(c)}`,fim:'Pedimos o apoio de vocês para reforçar em casa a regra da escola sobre o uso do celular.'}}},
+ freq:{nome:'Frequência',subs:{
+  seguidas:{l:'Faltas seguidas (3 dias ou mais)',n:2,ac:['Ligar para saber o motivo das faltas','Pedir atestado, se for questão de saúde','Registrar o contato e o motivo informado'],por:['Três faltas seguidas pedem busca ativa: saber o motivo antes que vire abandono'],f:c=>`Sentimos falta de ${c.nome} nas aulas dos últimos dias.${det(c)} Está tudo bem?`,fim:'Por favor, nos informe o motivo das faltas e, se for questão de saúde, envie o atestado. Estamos à disposição para ajudar no que for preciso.'},
+  frequentes:{l:'Muitas faltas no mês',n:3,ac:['Levantar as datas das faltas','Convocar a família','Sem retorno: seguir as orientações da SMED para infrequência, inclusive sobre o Conselho Tutelar'],por:['Faltas frequentes comprometem a aprendizagem e pedem compromisso combinado com a família'],f:c=>`Identificamos um número elevado de faltas de ${c.nome} neste mês.${det(c)} A presença nas aulas é fundamental para a aprendizagem.`,fim:'Pedimos atenção à frequência e que nos informem se houver alguma dificuldade.'},
+  atrasos:{l:'Atrasos recorrentes',n:1,ac:['Levantar quantos atrasos houve','Comunicar a família'],por:['Atraso recorrente costuma se resolver com um combinado com a família'],f:c=>`Temos observado que ${c.nome} tem chegado atrasado(a) com frequência.${det(c)}`,fim:'Pedimos atenção ao horário de entrada, para que não perca o início das aulas. Contamos com vocês!'}}},
+ ped:{nome:'Pedagógico',subs:{
+  tarefas:{l:'Não entrega atividades',n:1,ac:['Confirmar com os professores o que está pendente','Comunicar a família','Se for recorrente, avaliar intervenção pedagógica'],por:['A família pode acompanhar as atividades em casa'],f:c=>`Os professores nos informaram que ${c.nome} está com atividades pendentes.${det(c)}`,fim:'Pedimos que acompanhem em casa e incentivem a entrega. Estamos à disposição para ajudar.'},
+  material:{l:'Sem material',n:1,ac:['Verificar se é recorrente','Se houver dificuldade financeira, tratar com discrição e ver apoio da escola'],por:['Pode ser descuido ou dificuldade da família: vale perguntar com cuidado'],f:c=>`Temos observado que ${c.nome} tem vindo sem o material necessário para as aulas.${det(c)}`,fim:'Se houver alguma dificuldade, por favor nos procure, que vamos buscar a melhor forma de ajudar.'},
+  rendimento:{l:'Queda no rendimento',n:3,ac:['Reunir informações dos professores (notas, atividades, comportamento)','Convocar a família','Avaliar encaminhamento para intervenção pedagógica'],por:['Queda de rendimento pede plano conjunto escola-família, feito pessoalmente'],f:c=>`Gostaríamos de conversar sobre o desenvolvimento escolar de ${c.nome}.${det(c)} Queremos pensar juntos em formas de apoiá-lo(a).`,fim:'Pedimos que acompanhem os estudos em casa. Estamos à disposição.'}}},
+ outro:{nome:'Outra situação',subs:{
+  livre:{l:'Descrever livremente',n:1,ac:['Descreva o caso nos detalhes e toque em "Pedir análise ao Claude"'],por:['Situação fora das categorias: a análise depende do que você descrever'],f:c=>`Gostaríamos de informar sobre uma situação envolvendo ${c.nome} ${quando(c)}.${det(c)}`,fim:'Estamos à disposição para conversar.'}}}
+};
+const FLAGS=['Desmaiou ou perdeu a consciência','Vômito após a pancada','Sonolência, confusão ou fala enrolada','Sangramento que não para','Dificuldade para respirar','Dor intensa ou não consegue mexer o membro'];
+let st0={aid:null,cat:null,sub:null,flags:[],canal:null,form:{hora:'',local:'',det:'',cdia:''},editado:false};
+const aluno=()=>alunos.find(a=>a.id===st0.aid);
+const contatos=a=>a.cont&&a.cont.length?a.cont:(a.tels||[]).map(t=>({q:'Responsável',nome:a.resp||'',tel:t,wa:true}));
+const primeiro=n=>{const w=String(n||'').replace(/^(m[ãa]e|pai|respons[áa]vel):\s*/i,'').trim().split(/\s+/)[0]||'';return w?w[0].toUpperCase()+w.slice(1).toLowerCase():''};
+const ctSel=a=>contatos(a)[st0.ci]||contatos(a)[0];
+// ---------- abas ----------
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));['caso','hist','cont'].forEach(t=>$('#v-'+t).hidden=t!==b.dataset.t);if(b.dataset.t==='hist')renderHist();if(b.dataset.t==='cont')renderCont()});
+// ---------- estudante ----------
+$('#busca').oninput=()=>{const q=norm($('#busca').value);if(!q){$('#sug').innerHTML='';return}
+ const r=alunos.filter(a=>norm(a.nome+' '+a.turma).includes(q)).slice(0,8);
+ $('#sug').innerHTML=r.length?`<div class="sug">${r.map(a=>`<button data-id="${esc(a.id)}">${esc(a.nome)} <span class="mut">· ${esc(a.turma)}</span></button>`).join('')}</div>`:`<p class="mut">${alunos.length?'Ninguém encontrado.':'Nenhum estudante cadastrado.'} Cadastre na aba Contatos.</p>`;
+ $('#sug').querySelectorAll('button').forEach(b=>b.onclick=()=>{st0.aid=b.dataset.id;{const cs=contatos(aluno());st0.ci=Math.max(0,cs.findIndex(c=>c.wa))};$('#busca').value='';$('#sug').innerHTML='';renderSel();analisar()})};
+function renderSel(){const a=aluno();$('#busca').hidden=!!a;$('#selAluno').innerHTML=a?`<div class="sel"><div><b>${esc(a.nome)}</b>${a.turma?" · "+esc(a.turma):""}<br><span class="mut">${contatos(a).length?contatos(a).map(c=>esc(c.q+(c.nome?' '+primeiro(c.nome):'')+': '+c.tel)).join(' · '):'sem telefone cadastrado'}</span></div><button id="trocar">Trocar</button></div>`:'';
+ if(a)$('#trocar').onclick=()=>{st0.aid=null;renderSel();analisar();$('#busca').focus()}}
+// ---------- situação ----------
+function renderCats(){$('#cats').innerHTML=Object.entries(R).map(([k,v])=>`<button class="chip${st0.cat===k?' on':''}" data-k="${k}">${v.nome}</button>`).join('');
+ $('#cats').querySelectorAll('button').forEach(b=>b.onclick=()=>{st0.cat=b.dataset.k;st0.sub=Object.keys(R[st0.cat].subs).length===1?Object.keys(R[st0.cat].subs)[0]:null;st0.flags=[];st0.canal=null;st0.editado=false;renderCats();analisar(true)});
+ $('#subsBox').hidden=!st0.cat||st0.cat==='outro';
+ $('#subs').innerHTML=st0.cat?Object.entries(R[st0.cat].subs).map(([k,v])=>`<button class="chip${st0.sub===k?' on':''}" data-k="${k}">${v.l}</button>`).join(''):'';
+ $('#subs').querySelectorAll('button').forEach(b=>b.onclick=()=>{st0.sub=b.dataset.k;st0.canal=null;st0.editado=false;renderCats();analisar(true)});
+ $('#flags').innerHTML=st0.cat==='saude'&&st0.sub?`<label>Sinais de alerta (marque se houver)</label>${FLAGS.map((f,i)=>`<label class="chk"><input type="checkbox" data-i="${i}"${st0.flags.includes(i)?' checked':''}>${f}</label>`).join('')}`:'';
+ $('#flags').querySelectorAll('input').forEach(c=>c.onchange=()=>{st0.flags=[...$('#flags').querySelectorAll('input:checked')].map(x=>+x.dataset.i);st0.canal=null;st0.editado=false;analisar()})}
+// ---------- análise ----------
+const fone=t=>{let d=String(t).replace(/\D/g,'');if(d.length===10||d.length===11)d='55'+d;return d};
+const ctx=()=>{const a=aluno(),ct=ctSel(a);return{nome:primeiro(a.nome),resp:ct?primeiro(ct.nome):'',...st0.form}};
+function calc(){const a=aluno(),r=R[st0.cat].subs[st0.sub];let n=r.n;const por=[...r.por],ac=[...r.ac];
+ const lim=Date.now()-30*864e5,ant=casos.filter(x=>x.aid===a.id&&x.cat===st0.cat&&new Date(x.data)>lim);
+ if(ant.length){por.push(`${a.nome.split(' ')[0]} já teve ${ant.length} caso(s) de ${R[st0.cat].nome.toLowerCase()} nos últimos 30 dias (${ant.map(x=>x.sub.toLowerCase()).join(', ')})`);
+  if(st0.cat!=='saude'&&n<3){const n2=Math.min(3,n+(ant.length>=2?2:1));if(n2>n){n=n2;por.push('Pela reincidência, a recomendação sobe de nível')}}
+  if(st0.cat==='saude'&&ant.length>=2)ac.push('Casos de saúde repetidos: sugerir à família uma avaliação médica');
+  if(st0.cat==='comp'&&ant.length>=2)ac.push('Reincidência: envolver a direção e montar plano de acompanhamento')}
+ if(st0.flags.length){n=4;por.unshift('Sinal de alerta: '+st0.flags.map(i=>FLAGS[i].toLowerCase()).join('; '))}
+ return{a,r,n,por,ac:n===4?['Ligar para o SAMU (192) agora e seguir a orientação do atendente','Ligar para a família na sequência; a mensagem é só complemento','Não deixar o estudante sozinho; não oferecer comida, bebida ou medicamento','Informar a direção e registrar tudo com horários']:ac}}
+function montarMsg(r,canal){const c=ctx();
+ if(canal==='samu')return gen(`${ola(c)}\n\nURGENTE: ${c.nome} passou mal/se machucou ${quando(c)}.${det(c)} O atendimento de emergência já foi acionado. Por favor, entre em contato com a escola imediatamente.${ASS}`,aluno().g);
+ let t=`${ola(c)}\n\n${r.f(c)}`;
+ if(canal==='conv')t+=FECHA.conv(c);else if(canal==='lig')t+=FECHA.lig;else t+=' '+r.fim;
+ if(r.ex)t+=r.ex;return gen(t+ASS,aluno().g)}
+function analisar(rolar){const box=$('#analise');
+ if(!st0.cat||!st0.sub||!aluno()){box.innerHTML=st0.cat&&st0.sub&&!aluno()?'<div class="card empty">Escolha o estudante no passo 1 para ver a análise.</div>':'';return}
+ const {a,r,n,por,ac}=calc();const rec=NIV2CANAL[n];if(!st0.canal)st0.canal=rec;
+ const canais=n===4?['samu','lig']:['wa','lig','conv'];if(!canais.includes(st0.canal))st0.canal=rec;
+ const f=st0.form;
+ box.innerHTML=`<div class="card"><h2>3. Análise</h2>
+ <div class="nivel" style="background:${NIV[n][1]}"><b>${n}</b><div><span style="font-size:13px;opacity:.9">Nível recomendado</span><strong>${NIV[n][0]}</strong></div></div>
+ <div class="meter">${[1,2,3,4].map(i=>`<i style="${i<=n?'background:'+NIV[n][1]:''}"></i>`).join('')}</div>
+ ${n===4?'<div class="alerta"><b>SAMU: 192.</b> Ligue antes de qualquer mensagem.</div>':''}
+ <h3>Por quê</h3><ul>${por.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>
+ <h3>O que fazer</h3><ul>${ac.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>
+ <div class="row"><button class="btn alt" id="iaBtn">Copiar caso para analisar no Claude</button></div><p class="mut" style="margin:6px 0 0">Copia a situação, os detalhes e o histórico, sem nome nem telefone. Cole numa conversa com o Claude.</p>
+ </div>
+ <div class="card"><h2>4. Como acionar a família</h2>
+ <div class="opts">${canais.map(k=>`<label class="opt${st0.canal===k?' on':''}"><input type="radio" name="canal" value="${k}"${st0.canal===k?' checked':''}><span>${CANAIS[k][0]}${k===rec?'<span class="rec">recomendado</span>':''}<small>${CANAIS[k][1]}</small></span></label>`).join('')}</div>
+ ${st0.canal==='wa'&&n>=2&&st0.cat==='saude'?'<div class="alerta">Nesta situação a recomendação é ligar. Se mandar só a mensagem, confirme depois que a família leu.</div>':''}
+ </div>
+ <div class="card"><h2>5. Mensagem</h2>
+ <label>Tratamento na mensagem</label><div class="chips" id="gen">${[['m','Ele (menino)'],['f','Ela (menina)']].map(([k,l])=>`<button class="chip${a.g===k?' on':''}" data-g="${k}">${l}</button>`).join('')}</div>
+ <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:8px">
+  <div><label for="hora">Horário</label><input id="hora" type="time" value="${esc(f.hora)}"></div>
+  <div><label for="local">Onde / quando</label><input id="local" value="${esc(f.local)}" placeholder="Ex.: no recreio"></div></div>
+ <label for="det">O que aconteceu (entra na mensagem)</label><textarea id="det" placeholder="Ex.: escorregou na escada e bateu a testa; ficou com um galo, sem sangramento">${esc(f.det)}</textarea>
+ ${st0.canal==='conv'?`<label for="cdia">Dia e horário da convocação</label><input id="cdia" value="${esc(f.cdia)}" placeholder="Ex.: na quinta-feira (27/11), às 8h">`:''}
+ <label for="msg">Mensagem pronta (pode editar)</label>
+ <textarea id="msg" style="min-height:230px"></textarea>
+ <div id="fones"></div>
+ <div class="row"><a class="btn wa" id="wa" target="_blank" rel="noopener">Enviar pelo WhatsApp</a><button class="btn alt" id="copiar">Copiar</button>${st0.editado?'<button class="btn alt" id="refazer">Refazer mensagem</button>':''}</div>
+ </div>
+ <div class="card"><h2>6. Sua decisão</h2>
+ <select id="dec" aria-label="Decisão"><option>Enviei a mensagem</option><option>Liguei para a família</option><option>Convoquei a família</option><option>Acionei o SAMU</option><option>Resolvi na escola, sem acionar a família</option><option>Decidi não fazer nada</option></select>
+ <div class="row"><button class="btn" id="salvar">Salvar no histórico</button></div></div>`;
+ const msgEl=$('#msg');msgEl.value=st0.editado&&st0.msg?st0.msg:montarMsg(r,st0.canal);
+ const dec={wa:0,lig:1,conv:2,samu:3}[st0.canal];$('#dec').selectedIndex=dec;
+ box.querySelectorAll('input[name=canal]').forEach(i=>i.onchange=()=>{st0.canal=i.value;st0.editado=false;analisar()});
+ ['hora','local','det','cdia'].forEach(id=>{const e=$('#'+id);if(e)e.oninput=()=>{st0.form[id]=e.value;if(!st0.editado){msgEl.value=montarMsg(r,st0.canal);atualizarWa()}}});
+ box.querySelectorAll('#gen button').forEach(b=>b.onclick=()=>{a.g=b.dataset.g;salvarAluno(a);analisar()});
+ const ligaRefazer=()=>{$('#refazer').onclick=()=>{st0.editado=false;analisar()}};
+ msgEl.oninput=()=>{st0.editado=true;st0.msg=msgEl.value;atualizarWa();if(!$('#refazer')){$('#copiar').insertAdjacentHTML('afterend','<button class="btn alt" id="refazer">Refazer mensagem</button>');ligaRefazer()}};
+ if($('#refazer'))ligaRefazer();
+ const cs=contatos(a);
+ $('#fones').innerHTML=cs.length?`<label for="tel">Enviar para</label><select id="tel">${cs.map((c,i)=>`<option value="${i}"${i===(st0.ci||0)?' selected':''}>${esc(c.q)}${c.nome?' – '+esc(primeiro(c.nome)):''} · ${esc(c.tel)}${c.wa?'':' (fixo, sem WhatsApp)'}</option>`).join('')}</select>`:'<p class="alerta">Sem telefone cadastrado. Inclua na aba Contatos.</p>';
+ if($('#tel'))$('#tel').onchange=()=>{st0.ci=+$('#tel').value;if(!st0.editado)msgEl.value=montarMsg(r,st0.canal);atualizarWa()};atualizarWa();
+ $('#copiar').onclick=async()=>{try{await navigator.clipboard.writeText(msgEl.value);toast('Mensagem copiada')}catch(e){msgEl.select();toast('Texto selecionado: copie manualmente')}};
+ if($('#iaBtn'))$('#iaBtn').onclick=()=>pedirIA(r,n,por);
+ $('#salvar').onclick=async()=>{await salvarCaso({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),aid:a.id,nome:a.nome,turma:a.turma,cat:st0.cat,sub:r.l,nivel:n,canal:st0.canal,dec:$('#dec').value,det:st0.form.det,msg:msgEl.value,data:new Date().toISOString()});
+  toast('Caso salvo no histórico');st0={aid:null,cat:null,sub:null,flags:[],canal:null,form:{hora:'',local:'',det:'',cdia:''},editado:false};renderSel();renderCats();analisar();window.scrollTo({top:0})};
+ if(rolar===true)box.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'})}
+function atualizarWa(){const a=aluno();const w=$('#wa');if(!a||!w)return;const ct=ctSel(a);if(!ct||ct.wa===false){w.removeAttribute('href');w.style.opacity=.5;w.textContent=ct?'Telefone fixo: ligue ou copie':'Enviar pelo WhatsApp';return}w.style.opacity=1;w.textContent='Enviar pelo WhatsApp';w.href=`https://wa.me/${fone(ct.tel)}?text=${encodeURIComponent($('#msg').value)}`}
+async function pedirIA(r,n,por){const b=$('#iaBtn');b.disabled=true;
+ const a=aluno();const ano=(a.turma||'').match(/FRC(IA|PA|AA)(\d)/);const ano2=(a.turma||'').match(/^(\d)/);const anoTxt=ano2?`${ano2[1]}º ano do ensino fundamental`:ano?`${({IA:0,PA:3,AA:6})[ano[1]]+(+ano[2])}º ano do ensino fundamental`:'ensino fundamental';
+ const hist=casos.filter(x=>x.aid===a.id).slice(0,8).map(x=>`- ${x.data.slice(0,10)}: ${x.sub} → ${x.dec}`).join('\n')||'nenhum caso anterior';
+ const prompt=`Sou coordenador pedagógico de uma escola municipal de ensino fundamental em Belo Horizonte (rede SMED-BH). Eu decido; quero sua análise do caso abaixo. Responda em português do Brasil, direto, em no máximo 180 palavras, com estas partes: "Avaliação" (1-2 frases), "Recomendo" (3 a 5 ações práticas em ordem), "Atenção" (riscos, cuidados legais/ECA ou o que confirmar no regimento escolar). Não invente normas específicas; quando depender do regimento ou da SMED, diga para conferir.\n\nCaso: estudante do ${anoTxt}.\nSituação: ${R[st0.cat].nome} – ${r.l}.\nDetalhes: ${st0.form.det||'(não informados)'}${st0.form.local?`\nOnde: ${st0.form.local}`:''}\nSinais de alerta: ${st0.flags.map(i=>FLAGS[i]).join('; ')||'nenhum'}\nNível sugerido pelas regras: ${n} (${NIV[n][0]}). Motivos: ${por.join(' | ')}\nHistórico do estudante:\n${hist}`;
+ try{await navigator.clipboard.writeText(prompt);toast('Caso copiado. Cole no Claude.')}catch(e){toast('Não consegui copiar')}
+ b.disabled=false}
+// ---------- histórico ----------
+const CAN={wa:'WhatsApp',lig:'Ligação',conv:'Convocação',samu:'Emergência'};
+function renderHist(){const q=norm($('#hbusca').value);const l=casos.filter(c=>!q||norm(c.nome+' '+c.turma+' '+c.sub).includes(q));
+ $('#hlist').innerHTML=l.length?`<p class="mut">${l.length} caso(s)</p><table class="stack"><thead><tr><th>Data</th><th>Estudante</th><th>Situação</th><th>Nível</th><th>Decisão</th><th></th></tr></thead><tbody>${l.map(c=>`<tr><td>${esc(new Date(c.data).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}))}</td><td>${esc(c.nome)}<br><span class="mut">${esc(c.turma)}</span></td><td>${esc(c.sub)}${c.det?`<br><span class="mut">${esc(c.det)}</span>`:''}</td><td><span class="tag" style="background:${NIV[c.nivel]?.[1]||'gray'}">${esc(c.nivel)}</span> ${esc(CAN[c.canal]||'')}</td><td>${esc(c.dec)}</td><td><button class="del" data-id="${esc(c.id)}">Excluir</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty">Nenhum caso salvo ainda.</div>';
+ $('#hlist').querySelectorAll('.del').forEach(b=>b.onclick=()=>{if(b.dataset.ok){apagarCaso(b.dataset.id);toast('Caso excluído')}else{b.dataset.ok=1;b.textContent='Confirmar exclusão'}})}
+$('#hbusca').oninput=renderHist;
+// ---------- contatos ----------
+function renderCont(){const q=norm($('#cbusca').value);const l=alunos.filter(a=>!q||norm(a.nome+' '+a.turma).includes(q));
+ $('#clist').innerHTML=`<p class="mut">${alunos.length} estudante(s), ${alunos.filter(a=>contatos(a).some(c=>c.wa)).length} com WhatsApp</p>`+(l.length?`<table class="stack"><thead><tr><th>Estudante</th><th>Turma</th><th>Responsável</th><th>Telefone</th><th></th></tr></thead><tbody>${l.slice(0,200).map(a=>`<tr><td>${esc(a.nome)}</td><td>${esc(a.turma)}</td><td>${contatos(a).map(c=>esc(c.q+(c.nome?': '+c.nome:''))).join('<br>')}</td><td>${contatos(a).map(c=>esc(c.tel)).join('<br>')}</td><td><button class="del" data-ed="${esc(a.id)}" style="color:var(--pet)">Editar</button></td></tr>`).join('')}</tbody></table>${l.length>200?'<p class="mut">Mostrando 200. Use o filtro.</p>':''}`:'<div class="empty">Importe a planilha ou cadastre acima.</div>');
+ $('#clist').querySelectorAll('[data-ed]').forEach(b=>b.onclick=()=>{const a=alunos.find(x=>x.id===b.dataset.ed);$('#nNome').value=a.nome;$('#nTurma').value=a.turma;{const c0=contatos(a)[0];$('#nResp').value=c0?(c0.q!=='Responsável'?c0.q+': ':'')+c0.nome:'';$('#nTel').value=contatos(a).map(c=>c.tel).join(' / ')}$('#nNome').scrollIntoView({block:'center'})})}
+$('#cbusca').oninput=renderCont;
+const normTels=v=>{const out=[];for(const p of String(v??'').split(/[,\/;?]| e | ou /i)){let d=p.replace(/\D/g,'').replace(/^0+/,'');if(d.startsWith('55')&&d.length>=12)d=d.slice(2);if(d.length===8||d.length===9)d='31'+d;if(d.length===10&&/[6-9]/.test(d[2]))d=d.slice(0,2)+'9'+d.slice(2);const f=`(${d.slice(0,2)}) ${d.slice(2,-4)}-${d.slice(-4)}`;if(d.length===11&&d[2]==='9')out.push({tel:f,wa:true});else if(d.length===10&&/[2-5]/.test(d[2]))out.push({tel:f,wa:false})}return out};
+const tc=s=>String(s??'').replace(/\s+/g,' ').trim().replace(/^[-\s]+|[-\s]+$/g,'').toLowerCase().split(' ').map((w,i)=>i&&['de','da','do','das','dos','e'].includes(w)?w:w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+const separaTels=s=>[...new Set(String(s).split(/[\/;,]| e /).map(t=>t.trim()).filter(t=>t.replace(/\D/g,'').length>=8))];
+const mkId=n=>norm(n).replace(/[^a-z0-9]+/g,'-').slice(0,60);
+$('#nSalvar').onclick=async()=>{const nome=$('#nNome').value.trim();if(!nome){toast('Informe o nome');return}
+ const rs=$('#nResp').value.trim(),qm=rs.match(/^(m[ãa]e|pai)\s*:?\s*/i);const ts=normTels($('#nTel').value);const novo={id:mkId(nome),nome,turma:$('#nTurma').value.trim(),resp:rs,cont:ts.map(t=>({q:qm?(/^p/i.test(qm[1])?'Pai':'Mãe'):'Responsável',nome:qm?rs.slice(qm[0].length):rs,tel:t.tel,wa:t.wa})),tels:ts.map(t=>t.tel)};
+ const i=alunos.findIndex(a=>norm(a.nome)===norm(nome));if(i>=0){novo.id=alunos[i].id;if(alunos[i].g)novo.g=alunos[i].g;alunos[i]=novo}else alunos.push(novo);
+ alunos.sort((x,y)=>x.nome.localeCompare(y.nome,'pt'));await salvarAluno(novo);['nNome','nTurma','nResp','nTel'].forEach(k=>$('#'+k).value='');renderCont();toast(i>=0?'Estudante atualizado':'Estudante cadastrado')};
+$('#arq').onchange=e=>{const f=e.target.files[0];if(!f)return;if(typeof XLSX==='undefined'){$('#impinfo').textContent='Não consegui carregar o leitor de planilhas. Verifique a internet e tente de novo.';return}
+ $('#impinfo').textContent='Lendo a planilha…';
+ const rd=new FileReader();rd.onload=async()=>{try{const wb=XLSX.read(rd.result,{type:'array'});const novos=[],vistos=new Set();
+  wb.SheetNames.forEach(sn=>{const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:''});
+   const hi=rows.findIndex(r=>r.some(c=>/^(aluno|estudante|nome)/.test(norm(c))));if(hi<0)return;const h=rows[hi].map(norm);
+   const iN=h.findIndex(x=>/^(aluno|estudante|nome)/.test(x)),iT=h.findIndex(x=>/turma|classe/.test(x));
+   const pares=[];h.forEach((x,i)=>{const m=x.match(/^(mae|pai|respons)/);if(m)pares.push([i,{mae:'Mãe',pai:'Pai',respons:'Responsável'}[m[1]]])});
+   const soTel=!pares.length?h.map((x,i)=>/tel|cel|whats|fone|contato/.test(x)?i:-1).filter(i=>i>=0):[];
+   rows.slice(hi+1).forEach(r=>{const nome=tc(r[iN]);let turma=iT>=0?String(r[iT]).trim().toUpperCase():'';
+    if(!turma&&nome.split(' ').length>=2)turma=String(sn).trim().toUpperCase();if(!nome||!turma||/^\d+$/.test(nome))return;
+    const cont=[];pares.forEach(([i,q])=>{let pn=r[i]&&r[i]!=='0'&&r[i]!==0?tc(r[i]):'';if(pn==='-')pn='';normTels(r[i+1]).forEach(t=>cont.push({q,nome:pn,tel:t.tel,wa:t.wa}))});
+    soTel.forEach(i=>normTels(r[i]).forEach(t=>cont.push({q:'Responsável',nome:'',tel:t.tel,wa:t.wa})));
+    let id=mkId(nome);if(vistos.has(id))id+='-'+mkId(turma);vistos.add(id);
+    const c0=cont.find(c=>c.nome);novos.push({id,nome,turma,resp:c0?c0.q+': '+c0.nome:'',cont,tels:cont.map(c=>c.tel)})})});
+  if(!novos.length){$('#impinfo').textContent='Não achei uma coluna com o nome dos estudantes. Confira se a planilha tem cabeçalho (Nome, Turma, Responsável, Telefone).';return}
+  alunos=novos.sort((x,y)=>x.nome.localeCompare(y.nome,'pt'));await salvarAlunos();renderCont();$('#impinfo').textContent=`Importados ${novos.length} estudantes, ${novos.filter(a=>a.cont.some(c=>c.wa)).length} com WhatsApp.`}catch(err){$('#impinfo').textContent='Erro ao ler a planilha: '+err.message}};rd.readAsArrayBuffer(f)};
+renderCats();renderSel();renderCont();renderHist();
+if(SESS&&API){tela('app');sincronizar()}else tela('login');
+}
+</script>
+</body>
+</html>
