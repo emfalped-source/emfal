@@ -1,0 +1,37 @@
+/* =========================================================
+   TEMA EMFAL — arquivo ÚNICO de cores do Super App e dos módulos
+   (Corretor, Prova Online, Relatórios, Currículo em Ação, Ocorrências).
+   Para mudar a identidade visual, mude SÓ aqui.
+   Endereço: https://emfalped-source.github.io/emfal/tema.css
+   Paleta oficial: azul-petróleo, terracota e areia.
+   ========================================================= */
+:root{
+  /* principal — azul-petróleo */
+  --emfal-primaria:#1F5C6B;
+  --emfal-primaria-esc:#164550;
+  --emfal-primaria-cl:#E3EFF1;
+  /* destaque — terracota */
+  --emfal-destaque:#C8613D;
+  --emfal-destaque-btn:#B5532F;
+  --emfal-destaque-esc:#A44B2C;
+  --emfal-destaque-cl:#F6E1D8;
+  /* fundos — areia */
+  --emfal-fundo:#F5F1E8;
+  --emfal-fundo-2:#EFE9DC;
+  --emfal-fundo-veu:rgba(245,241,232,.85);
+  --emfal-cartao:#FFFFFF;
+  /* texto e linhas */
+  --emfal-tinta:#16202E;
+  --emfal-suave:#4A5565;
+  --emfal-borda:#D5DBE3;
+  --emfal-sobre-primaria:#FFFFFF;
+  /* situações */
+  --emfal-ok:#1B7F4B;
+  --emfal-ok-cl:#E3F4EA;
+  --emfal-erro:#B42318;
+  --emfal-erro-cl:#FDE8E6;
+  --emfal-alerta:#B45309;
+  --emfal-alerta-cl:#FDF1E2;
+  /* fonte */
+  --emfal-fonte:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
