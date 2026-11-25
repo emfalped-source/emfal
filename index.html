@@ -152,7 +152,7 @@ h2{margin:6px 0 0;font-size:15px;color:var(--azul-esc)}
     <div id="cfg-dev" hidden>
       <h2>Desenvolvedor (só pedro.coord)</h2>
       <div class="cfg" id="cfg-dev-lista"></div>
-      <p class="rodape" style="text-align:left">Para salvar qualquer mudança no código continua sendo preciso entrar no GitHub (emfalpbh) e no Google (pedro.motta). É isso que impede outra pessoa de mexer, mesmo que veja esta tela.</p>
+      <p class="rodape" style="text-align:left">Para salvar qualquer mudança no código continua sendo preciso entrar no GitHub (emfalped-source) e no Google (pedro.motta). É isso que impede outra pessoa de mexer, mesmo que veja esta tela.</p>
     </div>
   </div>
 </section>
@@ -168,13 +168,13 @@ h2{margin:6px 0 0;font-size:15px;color:var(--azul-esc)}
 
 <div class="carga" id="carga" hidden><span id="cargaMsg">Carregando…</span></div>
 
-<script src="https://emfalpbh.github.io/corretor/conta-emfal.js"></script>
+<script src="https://emfalped-source.github.io/corretor/conta-emfal.js"></script>
 <script>
 'use strict';
 // Um servidor só (o do Corretor) atende todos os módulos: Ocorrências, Relatórios e Currículo
 // respondem por "oc.", "rel." e "cur." no mesmo endereço. As telas de cada módulo ficam no mesmo
-// endereço (emfalpbh.github.io) e leem a sessão guardada aqui.
-var BASE = 'https://emfalpbh.github.io/';
+// endereço (emfalped-source.github.io) e leem a sessão guardada aqui.
+var BASE = 'https://emfalped-source.github.io/';
 var CORRETOR_API = 'https://script.google.com/macros/s/AKfycbzCbPfrmF1AZhXP2xh0Se-mMQUJlWqbTkCZ8doxeNOsn5XHBE-2YMW-M6T4_R3BtBrF/exec';
 var MODULOS = [
   { id: 'corretor', nome: 'Corretor', desc: 'Correção de provas por foto', url: BASE + 'corretor/', chave: 'corretor_sessao', pre: null,
@@ -194,14 +194,14 @@ var CONFIG = [
 ];
 var DEV_USUARIO = 'pedro.coord';
 var DEV = [
-  ['Código do Super App EMFAL', 'https://github.com/emfalpbh/emfal'],
-  ['Código do Corretor', 'https://github.com/emfalpbh/corretor'],
-  ['Código da Prova Online', 'https://github.com/emfalpbh/prova'],
-  ['Código dos Relatórios', 'https://github.com/emfalpbh/relatorios'],
-  ['Código do Currículo em Ação', 'https://github.com/emfalpbh/curriculo'],
-  ['Código das Ocorrências', 'https://github.com/emfalpbh/ocorrencias'],
+  ['Código do Super App EMFAL', 'https://github.com/emfalped-source/emfal'],
+  ['Código do Corretor', 'https://github.com/emfalped-source/corretor'],
+  ['Código da Prova Online', 'https://github.com/emfalped-source/prova'],
+  ['Código dos Relatórios', 'https://github.com/emfalped-source/relatorios'],
+  ['Código do Currículo em Ação', 'https://github.com/emfalped-source/curriculo'],
+  ['Código das Ocorrências', 'https://github.com/emfalped-source/ocorrencias'],
   ['Servidor único da EMFAL (Apps Script do Corretor)', 'https://script.google.com/home/projects/19TvgMNI-G9CNM6VEzr9gNXNDfQKdgZEiIZ7_YpXVHGTbecAQz6vZGvWD/edit'],
-  ['Publicação dos sites (GitHub Pages)', 'https://github.com/emfalpbh/emfal/settings/pages']
+  ['Publicação dos sites (GitHub Pages)', 'https://github.com/emfalped-source/emfal/settings/pages']
 ];
 var ALUNO = { id: 'aluno', nome: 'Prova do estudante', url: BASE + 'prova/' };
 var CHAVE = 'superapp_sessao_v2'; // v2: servidor único (todos entram de novo uma vez)
